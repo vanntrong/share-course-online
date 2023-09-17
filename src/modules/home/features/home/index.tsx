@@ -3,8 +3,16 @@ import classNames from "./styles.module.scss";
 import HomeSlider from "../../components/homeSlider";
 import HomeFormLogin from "../../components/homeFormLogin";
 import ListCourses from "../../components/listCourses";
+import useGetCategories from "@/modules/categories/services/useGetCategories";
+import useLogin from "@/modules/auth/services/useLogin";
+import { useAuthContext } from "@/providers/authProvider";
+import HomeUserInfo from "../../components/homeUserInfo";
 
 const Home = () => {
+  const { data } = useGetCategories();
+  const { user } = useAuthContext();
+  const { mutate, isLoading } = useLogin();
+
   return (
     <section>
       <div>
@@ -22,25 +30,25 @@ const Home = () => {
             <HomeSlider />
           </Grid.Col>
           <Grid.Col span={4}>
-            <HomeFormLogin />
+            {user ? (
+              <HomeUserInfo user={user} />
+            ) : (
+              <HomeFormLogin onSubmit={mutate} isLoading={isLoading} />
+            )}
           </Grid.Col>
         </Grid>
 
-        <Space h="lg" />
-
-        <ListCourses title="Bộ tài liệu nổi bật" slug="bo-tai-lieu-noi-bat" />
-
-        <Space h={100} />
-
-        <ListCourses title="Bộ sưu tập nổi bật" slug="bo-suu-tap-noi-bat" />
-
-        <Space h={100} />
-
-        <ListCourses title="Bộ sưu tập mới" slug="bo-suu-tap-moi" />
-
-        <Space h={100} />
-
-        <ListCourses title="Tài liệu mới" slug="tai-lieu-moi" />
+        {data?.data?.map((category) => (
+          <>
+            <Space h="lg" />
+            <ListCourses
+              title={category.name}
+              id={category.id}
+              documents={category.documents || []}
+              key={category.id}
+            />
+          </>
+        ))}
       </Container>
     </section>
   );

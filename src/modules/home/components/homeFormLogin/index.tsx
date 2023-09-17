@@ -2,13 +2,35 @@ import {
   Button,
   Checkbox,
   Container,
+  Flex,
+  Loader,
   Space,
   TextInput,
   Title,
 } from "@mantine/core";
 import classNames from "./styles.module.scss";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  LoginPayload,
+  loginValidation,
+} from "@/modules/auth/validations/loginValidation";
+import { FC } from "react";
 
-const HomeFormLogin = () => {
+interface HomeFormLoginProps {
+  onSubmit: (data: LoginPayload) => void;
+  isLoading?: boolean;
+}
+
+const HomeFormLogin: FC<HomeFormLoginProps> = ({ onSubmit, isLoading }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<LoginPayload>({
+    resolver: zodResolver(loginValidation),
+  });
+
   return (
     <Container className={classNames.container}>
       <Title
@@ -21,22 +43,38 @@ const HomeFormLogin = () => {
         Đăng nhập
       </Title>
       <div>
-        <TextInput placeholder="Email" label="Email" withAsterisk />
+        <TextInput
+          placeholder="Username"
+          label="Username"
+          withAsterisk
+          {...register("login")}
+          error={errors.login?.message}
+        />
         <Space h="sm" />
         <TextInput
           placeholder="Mật khẩu"
           label="Mật khẩu"
           withAsterisk
           type="password"
+          {...register("password")}
+          error={errors.password?.message}
         />
         <Space h="sm" />
         <Checkbox
           label="Tôi đồng ý với thoả thuận sử dụng của TaiLieuVN"
           required
+          {...register("checkbox")}
         />
         <Space h="sm" />
-        <Button fullWidth disabled>
-          <span>Đăng nhập</span>
+        <Button
+          fullWidth
+          disabled={!isValid || isLoading}
+          onClick={handleSubmit(onSubmit)}
+        >
+          <Flex direction={"row"} justify={"center"} gap={"md"}>
+            {isLoading && <Loader />}
+            <span>Đăng nhập</span>
+          </Flex>
         </Button>
       </div>
     </Container>
