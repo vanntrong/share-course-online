@@ -18,7 +18,7 @@ export interface Column<T> {
   disableInEdit?: boolean;
   renderInEdit?: (props: any) => React.ReactNode;
   inputProps?: TextInputProps;
-  type?: "input" | "textarea" | "file";
+  type?: "input" | "textarea" | "file" | "number";
 }
 
 interface AdminTableProps<T> {

@@ -6,6 +6,7 @@ import { Box, Button, Flex, Space, Text, Title } from "@mantine/core";
 import { AiOutlineCloudDownload, AiOutlineEye } from "react-icons/ai";
 import classNames from "./styles.module.scss";
 import DocViewer from "@/components/docViewer";
+import { downloadAsset } from "@/utils/file";
 
 interface ListCoursesItemProps {
   document: Document;
@@ -59,7 +60,11 @@ const ListCoursesItem: FC<ListCoursesItemProps> = ({ document }) => {
             >
               <span>Xem trước</span>
             </Button>
-            <Button leftIcon={<AiOutlineCloudDownload />} color="yellow">
+            <Button
+              leftIcon={<AiOutlineCloudDownload />}
+              color="yellow"
+              onClick={() => downloadAsset(document.filePath, document.title)}
+            >
               <span>Tải về</span>
             </Button>
           </Flex>
@@ -69,7 +74,7 @@ const ListCoursesItem: FC<ListCoursesItemProps> = ({ document }) => {
       <DocViewer
         open={isShow}
         onClose={() => setIsShow(false)}
-        docs={[{ uri: getAsset(document.filePath) }]}
+        docs={[{ uri: document.filePath }]}
       />
     </div>
   );

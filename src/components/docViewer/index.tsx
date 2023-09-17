@@ -23,6 +23,9 @@ const DocViewer: FC<DocViewerProps> = ({ open, onClose, docs, ...props }) => {
         <BaseDocViewer
           pluginRenderers={DocViewerRenderers}
           documents={docs}
+          style={{
+            height: "80vh",
+          }}
           {...props}
         />
       </Container>

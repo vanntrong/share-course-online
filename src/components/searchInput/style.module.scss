@@ -1,0 +1,10 @@
+.card {
+  text-decoration: none;
+  color: black;
+}
+
+.card-container {
+  &:hover {
+    background-color: #eee;
+  }
+}

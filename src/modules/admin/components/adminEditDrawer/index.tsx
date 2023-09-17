@@ -5,6 +5,7 @@ import {
   Drawer,
   FileInput,
   Flex,
+  NumberInput,
   Space,
   TextInput,
   Textarea,
@@ -32,6 +33,8 @@ const getInput = (type: string) => {
       return Textarea;
     case "file":
       return FileInput;
+    case "number":
+      return NumberInput;
     default:
       return TextInput;
   }
@@ -54,7 +57,7 @@ const AdminEditDrawer = <T,>({
     setValue,
     control,
     reset,
-    formState: { isValid, errors },
+    formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: data as FormValues,
@@ -87,10 +90,19 @@ const AdminEditDrawer = <T,>({
           return (
             <div key={col.key}>
               {col.renderInEdit ? (
-                col.renderInEdit({
-                  ...col.inputProps,
-                  disabled: col.disableInEdit,
-                })
+                <Controller
+                  name={col.dataIndex}
+                  control={control}
+                  render={({ field }) =>
+                    col.renderInEdit?.({
+                      ...col.inputProps,
+                      disabled: col.disableInEdit,
+                      value: field.value,
+                      onChange: field.onChange,
+                      error: errors[col.dataIndex]?.message as string,
+                    }) as any
+                  }
+                />
               ) : (
                 <>
                   {type === "file" ? (
@@ -131,7 +143,7 @@ const AdminEditDrawer = <T,>({
           <Button
             color="blue"
             variant="light"
-            disabled={!isValid}
+            // disabled={Object.keys(errors).length > 0}
             onClick={handleSubmit(onSubmit)}
           >
             Save
