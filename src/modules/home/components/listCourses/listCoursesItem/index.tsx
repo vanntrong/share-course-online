@@ -6,7 +6,8 @@ import { Box, Button, Flex, Space, Text, Title } from "@mantine/core";
 import { AiOutlineCloudDownload, AiOutlineEye } from "react-icons/ai";
 import classNames from "./styles.module.scss";
 import DocViewer from "@/components/docViewer";
-import { downloadAsset } from "@/utils/file";
+import { downloadAsset, getFileType } from "@/utils/file";
+import { Link } from "react-router-dom";
 
 interface ListCoursesItemProps {
   document: Document;
@@ -24,9 +25,11 @@ const ListCoursesItem: FC<ListCoursesItemProps> = ({ document }) => {
           className={classNames["img"]}
         />
         <Box bg={"blue"} className={classNames["text-wrapper"]}>
-          <Title order={4} weight={500} color="white" size={"sm"} pl={"md"}>
-            {document.title}
-          </Title>
+          <Link to={`/documents/${document.id}`}>
+            <Title order={4} weight={500} color="white" size={"sm"} pl={"md"}>
+              {document.title}
+            </Title>
+          </Link>
         </Box>
       </div>
       <Space h={"sm"} />
@@ -74,7 +77,9 @@ const ListCoursesItem: FC<ListCoursesItemProps> = ({ document }) => {
       <DocViewer
         open={isShow}
         onClose={() => setIsShow(false)}
-        docs={[{ uri: document.filePath }]}
+        docs={[
+          { uri: document.filePath, fileType: getFileType(document.filePath) },
+        ]}
       />
     </div>
   );

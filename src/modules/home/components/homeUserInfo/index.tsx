@@ -1,5 +1,5 @@
 import useLogout from "@/modules/auth/services/useLogout";
-import { User } from "@/modules/auth/types";
+import { User, UserRole } from "@/modules/auth/types";
 import {
   Button,
   Center,
@@ -27,7 +27,7 @@ const HomeUserInfo: FC<HomeUserInfoProps> = ({ user }) => {
           <Text>{user.firstName + " " + user.lastName}</Text>
           <Space h={"sm"} />
           <Flex gap={"lg"}>
-            <Button>
+            {user.role === UserRole.Admin && (
               <Link
                 to={"/admin"}
                 style={{
@@ -35,9 +35,11 @@ const HomeUserInfo: FC<HomeUserInfoProps> = ({ user }) => {
                   color: "inherit",
                 }}
               >
-                <span>Đến trang quản trị</span>
+                <Button>
+                  <span>Đến trang quản trị</span>
+                </Button>
               </Link>
-            </Button>
+            )}
             <Button onClick={logout}>
               <span>Đăng xuất</span>
             </Button>

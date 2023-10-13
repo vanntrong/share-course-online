@@ -1,17 +1,20 @@
-import { Container, Grid, Image, Space } from "@mantine/core";
-import classNames from "./styles.module.scss";
-import HomeSlider from "../../components/homeSlider";
-import HomeFormLogin from "../../components/homeFormLogin";
-import ListCourses from "../../components/listCourses";
 import useGetCategories from "@/modules/categories/services/useGetCategories";
-import useLogin from "@/modules/auth/services/useLogin";
 import { useAuthContext } from "@/providers/authProvider";
+import { Container, Grid, Image, Space } from "@mantine/core";
+import HomeAuth from "../../components/homeAuth";
+import HomeSlider from "../../components/homeSlider";
 import HomeUserInfo from "../../components/homeUserInfo";
+import ListCourses from "../../components/listCourses";
+import classNames from "./styles.module.scss";
+import useGetCollections from "@/modules/collections/services/useGetCollections";
+import CollectionList from "../../../collections/collectionList";
 
 const Home = () => {
   const { data } = useGetCategories();
+  const { data: collectionsData } = useGetCollections();
   const { user } = useAuthContext();
-  const { mutate, isLoading } = useLogin();
+
+  console.log(collectionsData);
 
   return (
     <section>
@@ -30,11 +33,7 @@ const Home = () => {
             <HomeSlider />
           </Grid.Col>
           <Grid.Col span={4}>
-            {user ? (
-              <HomeUserInfo user={user} />
-            ) : (
-              <HomeFormLogin onSubmit={mutate} isLoading={isLoading} />
-            )}
+            {user ? <HomeUserInfo user={user} /> : <HomeAuth />}
           </Grid.Col>
         </Grid>
 
@@ -49,6 +48,8 @@ const Home = () => {
             />
           </>
         ))}
+
+        <CollectionList collections={collectionsData?.data} />
       </Container>
     </section>
   );

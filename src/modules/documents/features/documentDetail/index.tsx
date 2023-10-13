@@ -1,5 +1,8 @@
-import { downloadAsset } from "@/utils/file";
-import BaseDocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
+import { downloadAsset, getFileType } from "@/utils/file";
+import BaseDocViewer, {
+  DocViewerRenderers,
+  IDocument,
+} from "@cyntler/react-doc-viewer";
 import {
   Avatar,
   Box,
@@ -10,8 +13,11 @@ import {
   Text,
   Title,
 } from "@mantine/core";
+import { memo, useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
+import DocumentComment from "../../components/documentComment";
 import DocumentStat from "../../components/documentStat";
+import useGetCommentDocument from "../../services/useGetCommentDocument";
 import useGetDocument from "../../services/useGetDocument";
 import useGetRelatedDocuments from "../../services/useGetRelatedDocuments";
 import classNames from "./styles.module.scss";
@@ -21,18 +27,22 @@ const DocumentDetail = () => {
   const { data: { data } = {} } = useGetDocument(id, {
     enabled: !!id,
   });
+  const { data: comments, refetch } = useGetCommentDocument(Number(id), {
+    enabled: !!id,
+  });
 
   const { data: relatedDocuments } = useGetRelatedDocuments(id, {
     enabled: !!id,
   });
-
-  const docs = data
-    ? [
-        {
-          uri: data?.filePath,
-        },
-      ]
-    : [];
+  const docs = useMemo(() => {
+    if (!data) return [];
+    return [
+      {
+        uri: data.filePath,
+        fileType: getFileType(data.filePath),
+      },
+    ];
+  }, [data]);
 
   return (
     <Container size={1440} mt={"lg"}>
@@ -49,19 +59,8 @@ const DocumentDetail = () => {
         </Button>
       </Flex>
       <Box mt={"lg"}>
-        <Flex gap={"lg"}>
-          <BaseDocViewer
-            pluginRenderers={DocViewerRenderers}
-            documents={docs}
-            style={{
-              height: "80vh",
-            }}
-            config={{
-              header: {
-                disableHeader: true,
-              },
-            }}
-          />
+        <Flex gap={"lg"} h={"80vh"}>
+          <DocView docs={docs} />
           <Box
             style={{
               flexShrink: 0,
@@ -94,8 +93,32 @@ const DocumentDetail = () => {
         <Title order={4}>Mô tả</Title>
         <Text>{data?.content}</Text>
       </Box>
+
+      <Box mt={"lg"}>
+        <Title order={4}>Bình luận</Title>
+
+        <DocumentComment
+          reviews={comments?.data}
+          documentId={data?.id}
+          refetch={refetch}
+        />
+      </Box>
     </Container>
   );
 };
 
 export default DocumentDetail;
+
+const DocView = memo(({ docs }: { docs: IDocument[] }) => {
+  return (
+    <BaseDocViewer
+      pluginRenderers={DocViewerRenderers}
+      documents={docs}
+      config={{
+        header: {
+          disableHeader: true,
+        },
+      }}
+    />
+  );
+});

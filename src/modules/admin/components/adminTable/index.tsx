@@ -16,7 +16,7 @@ export interface Column<T> {
   key: string;
   render?: (value: T) => React.ReactNode;
   disableInEdit?: boolean;
-  renderInEdit?: (props: any) => React.ReactNode;
+  renderInEdit?: (props: any, data?: T | null) => React.ReactNode;
   inputProps?: TextInputProps;
   type?: "input" | "textarea" | "file" | "number";
 }

@@ -71,6 +71,8 @@ const AdminEditDrawer = <T,>({
     }
   }, [opened, data, setValue]);
 
+  console.log(errors);
+
   return (
     <Drawer
       opened={opened}
@@ -94,13 +96,16 @@ const AdminEditDrawer = <T,>({
                   name={col.dataIndex}
                   control={control}
                   render={({ field }) =>
-                    col.renderInEdit?.({
-                      ...col.inputProps,
-                      disabled: col.disableInEdit,
-                      value: field.value,
-                      onChange: field.onChange,
-                      error: errors[col.dataIndex]?.message as string,
-                    }) as any
+                    col.renderInEdit?.(
+                      {
+                        ...col.inputProps,
+                        disabled: col.disableInEdit,
+                        value: field.value,
+                        onChange: field.onChange,
+                        error: errors[col.dataIndex]?.message as string,
+                      },
+                      data
+                    ) as any
                   }
                 />
               ) : (

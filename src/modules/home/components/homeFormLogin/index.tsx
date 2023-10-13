@@ -7,6 +7,7 @@ import {
   Space,
   TextInput,
   Title,
+  Divider,
 } from "@mantine/core";
 import classNames from "./styles.module.scss";
 import { useForm } from "react-hook-form";
@@ -20,9 +21,14 @@ import { FC } from "react";
 interface HomeFormLoginProps {
   onSubmit: (data: LoginPayload) => void;
   isLoading?: boolean;
+  setIsLogin: (isLogin: boolean) => void;
 }
 
-const HomeFormLogin: FC<HomeFormLoginProps> = ({ onSubmit, isLoading }) => {
+const HomeFormLogin: FC<HomeFormLoginProps> = ({
+  onSubmit,
+  isLoading,
+  setIsLogin,
+}) => {
   const {
     register,
     handleSubmit,
@@ -74,6 +80,19 @@ const HomeFormLogin: FC<HomeFormLoginProps> = ({ onSubmit, isLoading }) => {
           <Flex direction={"row"} justify={"center"} gap={"md"}>
             {isLoading && <Loader />}
             <span>Đăng nhập</span>
+          </Flex>
+        </Button>
+
+        <Divider
+          orientation="horizontal"
+          my={"sm"}
+          label="Hoặc"
+          labelPosition="center"
+        />
+
+        <Button fullWidth onClick={() => setIsLogin(false)}>
+          <Flex direction={"row"} justify={"center"} gap={"md"}>
+            <span>Đăng Ký</span>
           </Flex>
         </Button>
       </div>

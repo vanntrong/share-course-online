@@ -20,7 +20,7 @@ export const useGetDocuments = (
 
 export const useInValidDocuments = () => {
   const func = () => {
-    queryClient.invalidateQueries(["documents"]);
+    queryClient.invalidateQueries(["documents", "all"]);
   };
 
   return func;

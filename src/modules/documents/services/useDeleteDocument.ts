@@ -3,11 +3,12 @@ import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 const useDeleteDocument = (
-  options?: UseMutationOptions<unknown, AxiosError, { id: number }>
+  options?: UseMutationOptions<unknown, AxiosError, { id: string | number }>
 ) => {
   return useMutation(
     ["documents", "delete"],
-    (data: { id: number }) => axiosInstance.delete(`/document/${data.id}`),
+    (data: { id: string | number }) =>
+      axiosInstance.delete(`/document/${data.id}`),
     options
   );
 };

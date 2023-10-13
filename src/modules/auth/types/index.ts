@@ -4,4 +4,10 @@ export type User = {
   lastName: string;
   login: string;
   token: string;
+  role: UserRole;
 };
+
+export enum UserRole {
+  User = "user",
+  Admin = "admin",
+}

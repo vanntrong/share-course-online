@@ -5,7 +5,7 @@ import { FC } from "react";
 interface DocViewerProps {
   open: boolean;
   onClose: () => void;
-  docs: { uri: string }[];
+  docs: { uri: string; fileType?: string }[];
 }
 
 const DocViewer: FC<DocViewerProps> = ({ open, onClose, docs, ...props }) => {
@@ -19,13 +19,10 @@ const DocViewer: FC<DocViewerProps> = ({ open, onClose, docs, ...props }) => {
         transition: "scale",
       }}
     >
-      <Container>
+      <Container h={"80vh"}>
         <BaseDocViewer
           pluginRenderers={DocViewerRenderers}
           documents={docs}
-          style={{
-            height: "80vh",
-          }}
           {...props}
         />
       </Container>
